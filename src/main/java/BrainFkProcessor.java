@@ -26,27 +26,12 @@ public class BrainFkProcessor {
         while (inputProcessPointer < input.length()) {
             char currentProcessedSign = input.charAt(inputProcessPointer);
 
-
             if (currentProcessedSign == StartLoop) {
-                int levelOfLoop = 1;
-                int inLoopPointer = inputProcessPointer + 1;
-                char interloopChar;
-                while (inLoopPointer != EndLoop && levelOfLoop != 0 && inLoopPointer < input.length()) {
-                    interloopChar = input.charAt(inLoopPointer);
-                    if (interloopChar == StartLoop) {
-                        levelOfLoop++;
-                    }
-                    if (interloopChar == EndLoop) {
-                        levelOfLoop--;
-                    }
-                    inLoopPointer++;
-                }
-                loop(input.substring(inputProcessPointer + 1, inLoopPointer - 1));
-                inputProcessPointer = inLoopPointer - 1;
+                inputProcessPointer = handleLoop(input, inputProcessPointer);
 
             } else if (currentProcessedSign == print) {
                 // out using ascii code
-                System.out.println((char)tab[pointer]);
+                System.out.println((char) tab[pointer]);
             } else if (currentProcessedSign == increment) {
                 tab[pointer]++;
             } else if (currentProcessedSign == decrement) {
@@ -58,22 +43,37 @@ public class BrainFkProcessor {
                 pointer--;
             }
 
-
             inputProcessPointer++;
         }
 
 
     }
 
-    private void checkSizeAndExtendIfNecessary(){
-        if(pointer > tab.length-2){
-           int[] newTab= new int[tab.length + 20];
-           for(int i = 0; i<tab.length; i++){
-               newTab[i] = tab[i];
-           }
+    private int handleLoop(String input, int inputProcessPointer) {
+        int levelOfLoop = 1;
+        int inLoopPointer = inputProcessPointer + 1;
+        char interloopChar;
+        while (inLoopPointer != EndLoop && levelOfLoop != 0 && inLoopPointer < input.length()) {
+            interloopChar = input.charAt(inLoopPointer);
+            if (interloopChar == StartLoop) {
+                levelOfLoop++;
+            }
+            if (interloopChar == EndLoop) {
+                levelOfLoop--;
+            }
+            inLoopPointer++;
+        }
+        loop(input.substring(inputProcessPointer + 1, inLoopPointer - 1));
+        inputProcessPointer = inLoopPointer - 1;
+        return inputProcessPointer;
+    }
 
-           this.tab = newTab;
+    private void checkSizeAndExtendIfNecessary() {
+        if (pointer > tab.length - 2) {
+            int[] newTab = new int[tab.length + 20];
+            System.arraycopy(tab, 0, newTab, 0, tab.length);
 
+            this.tab = newTab;
         }
 
     }
